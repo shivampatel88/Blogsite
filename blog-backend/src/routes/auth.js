@@ -1,24 +1,24 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require ('jsonwebtoken');
-const User  = require('/models/User');
+const User  = require('../models/User');
 
 const router = express.Router();
 
-router.post('/singup',async(req,res) => {
+router.post('/signgup',async(req,res) => {
     const {username,email,password} = req.body;
     try {
-        const hased = await bcrypt.hash(password, 10);
+        const hashed = await bcrypt.hash(password, 10);
         const newUser = new User({
             username,
             email,
-            password: hased
+            password: hashed
         });
         await newUser.save();
         res.status(201).json({msg : "user created successfully"});
     }
     catch(err){
-        res.status(500)/json({error: err.message})
+        res.status(500).json({error: err.message})
     }
 })
 
