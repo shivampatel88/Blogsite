@@ -16,7 +16,6 @@ const blogSchema = new mongoose.Schema({
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, default: Date.now },
     likes:{type: mongoose.Schema.Types.ObjectId,ref: "User",},
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [commentSchema],
     });
 
