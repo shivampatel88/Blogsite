@@ -53,7 +53,6 @@ const Hero = () => {
     );
 };
 
-// Blog Card Component
 const BlogCard = ({ blog, onCardClick }) => {
     return (
         <div 
@@ -166,16 +165,12 @@ const SignupModal = ({ isVisible, onClose }) => {
 };
 
 
-// --- Main App Component ---
-// This is the root component that brings everything together.
-
 export default function App() {
     const [isModalVisible, setModalVisible] = useState(false);
 
     const showModal = () => setModalVisible(true);
     const hideModal = () => setModalVisible(false);
 
-    // Add a keydown listener to close the modal with the Escape key.
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Escape') {
@@ -185,7 +180,6 @@ export default function App() {
 
         window.addEventListener('keydown', handleKeyDown);
 
-        // Cleanup the event listener when the component unmounts
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
