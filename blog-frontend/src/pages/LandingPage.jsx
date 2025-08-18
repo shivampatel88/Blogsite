@@ -84,9 +84,7 @@ const BlogCard = ({ blog, onCardClick }) => {
     );
 };
 
-// Featured Blogs Section Component
 const FeaturedBlogs = ({ onCardClick }) => {
-    // Mock data for blog posts. In a real application, this would come from an API.
     const blogs = [
         { id: 1, title: 'The Art of Minimalist Web Design', author: 'Alex Johnson', likes: '1.2k', views: '25k', imageUrl: 'https://images.unsplash.com/photo-1522199755839-a2bacb67c546?q=80&w=2072&auto=format&fit=crop' },
         { id: 2, title: "A Freelancer's Guide to Productivity", author: 'Samantha Bee', likes: '3.4k', views: '42k', imageUrl: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop' },
