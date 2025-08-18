@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import logo from "../assets/logo.png"
+
 import { Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
 export default function SignInPage({ baseUrl = "http://localhost:5000/api", onSuccess }) {
@@ -81,7 +83,7 @@ export default function SignInPage({ baseUrl = "http://localhost:5000/api", onSu
 
       <header className="relative z-10 flex items-center justify-between px-6 py-5 md:px-10">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-white/10 backdrop-blur ring-1 ring-white/15 shadow-[0_0_24px_0_rgba(99,102,241,0.6)]" />
+          <img src = {logo} alt = "logo" className="h-10 w-10 rounded-xl bg-white/10 backdrop-blur ring-1 ring-white/15 shadow-[0_0_24px_0_rgba(99,102,241,0.6)]" />
           <span className="text-lg font-semibold tracking-wide">BlogSite</span>
         </div>
         <nav className="hidden gap-6 text-sm text-white/80 md:flex">
