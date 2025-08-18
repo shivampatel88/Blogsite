@@ -6,11 +6,12 @@ const User  = require('../models/User');
 const router = express.Router();
 
 router.post('/signgup',async(req,res) => {
-    const {username,email,password} = req.body;
+    const {firstname,lastname,email,password} = req.body;
     try {
         const hashed = await bcrypt.hash(password, 10);
         const newUser = new User({
-            username,
+            firstname,
+            lastname,
             email,
             password: hashed
         });
