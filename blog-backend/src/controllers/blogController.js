@@ -6,7 +6,6 @@ exports.createBlog = async (req, res) => {
     try {
         let imageUrl = "https://your-default-banner-url.com/default.jpg";
 
-        // if user uploads an image, upload to Cloudinary
         if (req.file) {
             const result = await cloudinary.uploader.upload(req.file.path, {
                 folder: "blog_banners"
@@ -32,8 +31,6 @@ exports.createBlog = async (req, res) => {
     }
 };
 
-
-// Get all blogs
 exports.getAllBlogs = async (req, res) => {
     try {
         const blogs = await Blog.find().populate('author', 'username');
@@ -43,7 +40,6 @@ exports.getAllBlogs = async (req, res) => {
     }
 };
 
-// Get single blog
 exports.getBlogById = async (req, res) => {
     try {
         const blog = await Blog.findById(req.params.id).populate('author', 'username');

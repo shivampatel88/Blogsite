@@ -4,7 +4,6 @@ const Blog = require('../models/Blog');
 
 const router = express.Router();
 
-// Add a comment
 router.post('/:blogId', verifyToken, async (req, res) => {
   try {
     const { text } = req.body;
@@ -18,7 +17,6 @@ router.post('/:blogId', verifyToken, async (req, res) => {
     blog.comments.push({ user: req.userId, text: text.trim() });
     await blog.save();
 
-    // populate the just-added comment's user for display
     await blog.populate('comments.user', 'username email');
 
     res.status(201).json({
@@ -30,7 +28,6 @@ router.post('/:blogId', verifyToken, async (req, res) => {
   }
 });
 
-// Get all comments for a blog
 router.get('/:blogId', async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.blogId)
@@ -39,7 +36,6 @@ router.get('/:blogId', async (req, res) => {
 
     if (!blog) return res.status(404).json({ message: 'Blog not found' });
 
-    // oldest-first (optional)
     const comments = [...blog.comments].sort((a, b) => a.createdAt - b.createdAt);
 
     res.json(comments);
@@ -48,7 +44,6 @@ router.get('/:blogId', async (req, res) => {
   }
 });
 
-// Delete own comment
 router.delete('/:blogId/:commentId', verifyToken, async (req, res) => {
   try {
     const { blogId, commentId } = req.params;

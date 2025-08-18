@@ -14,9 +14,9 @@ router.put('/:blogId/toggle', verifyToken, async (req, res) => {
 
     const alreadyLiked = blog.likes.some(id => id.toString() === userId);
     if (alreadyLiked) {
-      blog.likes.pull(userId); // unlike
+      blog.likes.pull(userId);
     } else {
-      blog.likes.push(userId); // like
+      blog.likes.push(userId); 
     }
 
     await blog.save();
@@ -29,7 +29,6 @@ router.put('/:blogId/toggle', verifyToken, async (req, res) => {
   }
 });
 
-// Get like count (optional)
 router.get('/:blogId/count', async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.blogId).select('likes');
