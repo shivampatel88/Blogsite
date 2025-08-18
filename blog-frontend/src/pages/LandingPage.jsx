@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeartIcon = () => (
     <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -125,75 +126,23 @@ const Footer = () => {
     );
 };
 
-// Signup Modal Component
-const SignupModal = ({ isVisible, onClose }) => {
-    if (!isVisible) return null;
-
-    return (
-        <div 
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 transition-opacity duration-300"
-            onClick={onClose} // Close modal on overlay click
-        >
-            <div 
-                className="bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-8 text-center transform transition-transform duration-300 scale-100"
-                onClick={e => e.stopPropagation()} // Prevent closing when clicking inside modal
-            >
-                <button onClick={onClose} className="absolute top-4 right-4 text-gray-500 hover:text-white transition">
-                    <CloseIcon />
-                </button>
-                <h2 className="text-3xl font-bold mb-2 text-white">Join the Conversation</h2>
-                <p className="text-gray-400 mb-6">Sign up to read the full story, comment, and get access to exclusive content.</p>
-                
-                <div className="text-left bg-gray-700 p-4 rounded-lg mb-6 border border-gray-600">
-                    <h4 className="font-bold text-lg mb-2 text-white">The Art of Minimalist Web Design</h4>
-                    <p className="text-gray-300 text-sm">In a world saturated with digital noise, minimalism isn't just an aesthetic choice; it's a strategic one... <span className="font-bold text-indigo-400">[Read More]</span></p>
-                </div>
-
-                <form onSubmit={(e) => e.preventDefault()}>
-                    <div className="mb-4">
-                        <input type="email" placeholder="Enter your email" className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </div>
-                    <div className="mb-6">
-                        <input type="password" placeholder="Create a password" className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </div>
-                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Create Account</button>
-                </form>
-                <p className="text-sm text-gray-500 mt-4">Already have an account? <a href="#" className="font-semibold text-indigo-400 hover:underline">Log In</a></p>
-            </div>
-        </div>
-    );
-};
 
 
 export default function App() {
-    const [isModalVisible, setModalVisible] = useState(false);
+     const navigate = useNavigate();
 
-    const showModal = () => setModalVisible(true);
-    const hideModal = () => setModalVisible(false);
-
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            if (event.key === 'Escape') {
-                hideModal();
-            }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, []);
+    const handleSignUpClick = () => {
+    navigate("/signup");
+    };
 
     return (
         <div className="bg-gray-900">
-            <Header onSignUpClick={showModal} />
+            <Header onSignUpClick={handleSignUpClick} />
             <main>
                 <Hero />
-                <FeaturedBlogs onCardClick={showModal} />
+                <FeaturedBlogs onCardClick={handleSignUpClick} />
             </main>
             <Footer />
-            <SignupModal isVisible={isModalVisible} onClose={hideModal} />
         </div>
     );
 }
