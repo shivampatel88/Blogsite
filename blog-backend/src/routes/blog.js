@@ -7,5 +7,6 @@ const verifyToken = require('../middleware/authMiddleware');
 router.post('/', verifyToken,upload.single('banner'), createBlog);
 router.get('/', getAllBlogs);
 router.get('/:id', getBlogById);
+router.post("/", verifyToken, createBlog);
 
 module.exports = router;
