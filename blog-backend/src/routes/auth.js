@@ -5,7 +5,7 @@ const User  = require('../models/User');
 
 const router = express.Router();
 
-router.post('/signgup',async(req,res) => {
+router.post('/signup',async(req,res) => {
     const {firstname,lastname,email,password} = req.body;
 
     if (!firstname || !lastname || !email || !password) {

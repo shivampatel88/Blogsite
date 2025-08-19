@@ -15,7 +15,7 @@ const blogSchema = new mongoose.Schema({
     category: { type: String, enum: ["all", "food", "travel", "fashion", "technology"], default: "all" },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     createdAt: { type: Date, default: Date.now },
-    likes:{type: mongoose.Schema.Types.ObjectId,ref: "User",},
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     comments: [commentSchema],
     });
 

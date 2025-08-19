@@ -4,11 +4,11 @@ const cors = require('cors');
 
 require('dotenv').config();
 
-const authRoutes = require('./routes/auth');
-const blogRoutes = require('./routes/blog');
-const pageRoutes = require('./routes/pages');
-const likeRoutes = require('./routes/likes');
-const commentRoutes = require('./routes/comments');
+const authRoutes = require('./src/routes/auth');
+const blogRoutes = require('./src/routes/blog');
+const pageRoutes = require('./src/routes/pages');
+const likeRoutes = require('./src/routes/likes');
+const commentRoutes = require('./src/routes/comments');
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use('/api/pages', pageRoutes);
 app.use('/api/likes', likeRoutes);
 app.use('/api/comments', commentRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.error(err));
 
