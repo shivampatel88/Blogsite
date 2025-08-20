@@ -2,10 +2,11 @@ import React, { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import logo from "../assets/logo.png"
+import API_URL from "../api";
 
 import { Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
-export default function SignInPage({ baseUrl = "http://localhost:5000/api", onSuccess }) {
+export default function SignInPage({ baseUrl = API_URL, onSuccess }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

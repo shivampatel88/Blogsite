@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import logo from "../assets/logo.png";
+import API_URL from "../api"; // your axios/fetch base URL
 
-export default function SignUpPage({ baseUrl = "http://localhost:5000/api" }) {
+export default function SignUpPage({ baseUrl = API_URL }) {
   const navigate = useNavigate();
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
