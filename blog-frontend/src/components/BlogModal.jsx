@@ -13,11 +13,11 @@ export default function BlogModal({ blog, me, onClose }) {
     const fetchComments = async () => {
       try {
         setLoadingComments(true);
-        const res = await fetch(`${API_URL}/comments/${currentBlog._id}`);
-        const data = await res.json();
-        setCurrentBlog((prev) => ({ ...prev, comments: data }));
+        const res = await API_URL.get(`/comments/${currentBlog._id}`);
+        // const data = await res.json();
+        setCurrentBlog((prev) => ({ ...prev, comments: res.data || [] }));
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching comments:", err);
       } finally {
         setLoadingComments(false);
       }
@@ -28,18 +28,18 @@ export default function BlogModal({ blog, me, onClose }) {
   // ---- Toggle Like ----
   const handleToggleLike = async () => {
     try {
-      const res = await fetch(`${API_URL}/likes/${currentBlog._id}/toggle`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+      const res = await API_URL.put(`/likes/${currentBlog._id}/toggle`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // const data = await res.json();
       setCurrentBlog((prev) => ({
         ...prev,
-        likes: data.likesCount,
-        likedByMe: data.liked,
+        likesCount: res.data.likesCount,   // new field
+        likedByMe: res.data.liked,
       }));
     } catch (err) {
-      console.error(err);
+      console.error("Error toggling like:", err);
     }
   };
 
@@ -47,16 +47,13 @@ export default function BlogModal({ blog, me, onClose }) {
   const handleAddComment = async () => {
     if (!text.trim()) return;
     try {
-      const res = await fetch(`${API_URL}/comments/${currentBlog._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ text }),
-      });
-      const data = await res.json();
-      setCurrentBlog((prev) => ({ ...prev, comments: data.comments }));
+      const res = await API_URL.post(
+        `/comments/${currentBlog._id}`,
+        { text },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      // const data = await res.json();
+      setCurrentBlog((prev) => ({ ...prev, comments: res.data.comments }));
       setText("");
     } catch (err) {
       console.error(err);
@@ -66,22 +63,17 @@ export default function BlogModal({ blog, me, onClose }) {
   // ---- Delete Comment ----
   const handleDeleteComment = async (commentId) => {
     try {
-      const res = await fetch(
-        `${API_URL}/comments/${currentBlog._id}/${commentId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      if (res.ok) {
+      const res = await API_URL.delete(`/comments/${currentBlog._id}/${commentId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.status === 200) {
         setCurrentBlog((prev) => ({
           ...prev,
           comments: prev.comments.filter((c) => c._id !== commentId),
         }));
       }
     } catch (err) {
-      console.error(err);
-    }
+      console.error("Error deleting comment:", err);      }
   };
 
   return (
@@ -102,9 +94,8 @@ export default function BlogModal({ blog, me, onClose }) {
               currentBlog.likedByMe
                 ? "bg-rose-500/90 text-white"
                 : "bg-white/60 hover:bg-white dark:bg-white/10"
-            }`}
-          >
-            ♥ {currentBlog.likes || 0}
+            }`}>
+            ♥  {currentBlog.likesCount ?? (Array.isArray(currentBlog.likes) ? currentBlog.likes.length : 0)}  
           </button>
         </div>
 
@@ -139,23 +130,15 @@ export default function BlogModal({ blog, me, onClose }) {
               <div className="mt-8">
                 <h3 className="mb-3 text-lg font-semibold">Comments</h3>
 
-                <form
-                  onSubmit={(e) => {
+                <form onSubmit={(e) => {
                     e.preventDefault();
                     handleAddComment();
                   }}
-                  className="mb-4 flex gap-2"
-                >
-                  <input
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    placeholder="Write a comment…"
-                    className="flex-1 rounded-xl border border-slate-200/60 bg-white/70 px-3 py-2 text-sm outline-none placeholder:opacity-50 focus:border-indigo-300 dark:border-white/10 dark:bg-white/10"
-                  />
-                  <button
-                    type="submit"
-                    className="rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-600"
-                  >
+                  className="mb-4 flex gap-2">
+                  <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Write a comment…"
+                    className="flex-1 rounded-xl border border-slate-200/60 bg-white/70 px-3 py-2 text-sm outline-none placeholder:opacity-50 focus:border-indigo-300 dark:border-white/10 dark:bg-white/10"/>
+                  <button type="submit"
+                    className="rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-600">
                     Post
                   </button>
                 </form>
@@ -165,10 +148,8 @@ export default function BlogModal({ blog, me, onClose }) {
                 ) : (
                   <ul className="space-y-3">
                     {currentBlog.comments?.map((c) => (
-                      <li
-                        key={c._id}
-                        className="rounded-xl border border-slate-200/60 bg-white/70 p-3 text-sm dark:border-white/10 dark:bg-white/5"
-                      >
+                      <li key={c._id}
+                        className="rounded-xl border border-slate-200/60 bg-white/70 p-3 text-sm dark:border-white/10 dark:bg-white/5">
                         <div className="mb-1 flex items-center justify-between">
                           <span className="font-medium">
                             {c.user?.username}
@@ -178,16 +159,14 @@ export default function BlogModal({ blog, me, onClose }) {
                           </span>
                         </div>
                         <p className="opacity-90">{c.text}</p>
-                        {c.user?._id === me.id && (
-                          <div className="mt-2 text-right">
-                            <button
-                              onClick={() => handleDeleteComment(c._id)}
-                              className="rounded-lg px-2 py-1 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        )}
+                        {c.user?._id && me?._id && c.user._id === me._id && (
+                        <div className="mt-2 text-right">
+                          <button onClick={() => handleDeleteComment(c._id)}
+                            className="rounded-lg px-2 py-1 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10">
+                            Delete
+                          </button>
+                        </div>
+                          )}
                       </li>
                     ))}
                     {currentBlog.comments?.length === 0 && (

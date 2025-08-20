@@ -5,7 +5,7 @@ import { Eye, EyeOff, Mail, Lock, User, ArrowRight, CheckCircle2, Loader2 } from
 import logo from "../assets/logo.png";
 import API_URL from "../api"; // your axios/fetch base URL
 
-export default function SignUpPage({ baseUrl = API_URL }) {
+export default function SignUpPage( ) {
   const navigate = useNavigate();
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -28,19 +28,19 @@ export default function SignUpPage({ baseUrl = API_URL }) {
 
     try {
       setLoading(true);
-      const res = await fetch(`${baseUrl}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstname, lastname, email, password }),
-      });
+      const res = await API_URL.post("/auth/signup", {
+      firstname,
+      lastname,
+      email,
+      password,
+    });
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || "Signup failed");
-
+      res.data;
       setOk(true);
       setTimeout(() => navigate("/signin"), 1200);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      console.error("Signup error:", err.response?.data || err.message);
+      setError(err.response?.data?.error || "Something went wrong");
     } finally {
       setLoading(false);
     }

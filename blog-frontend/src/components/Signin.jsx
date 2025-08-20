@@ -6,7 +6,7 @@ import API_URL from "../api";
 
 import { Eye, EyeOff, Mail, Lock, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 
-export default function SignInPage({ baseUrl = API_URL, onSuccess }) {
+export default function SignInPage({ onSuccess }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,20 +39,18 @@ export default function SignInPage({ baseUrl = API_URL, onSuccess }) {
 
     try {
       setLoading(true);
-      const res = await fetch(`${baseUrl}/auth/signin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await API_URL.post("/auth/signin", {email,password,});
 
-      const data = await res.json().catch(() => ({}));
+      const data = res.data;
 
-      if (!res.ok) {
-        throw new Error(data?.error || "Invalid credentials");
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
       }
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
       }
       setOk(true);
       if (typeof onSuccess === "function") onSuccess(data?.user || null);

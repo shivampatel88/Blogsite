@@ -23,7 +23,7 @@ export default function BlogList() {
             <p className="text-sm text-gray-300">
               By {blog.author?.username} · {blog.category}
             </p>
-            <p className="text-sm text-gray-400">{blog.likes.length} ❤️</p>
+            <p className="text-sm text-gray-400">{Array.isArray(blog.likes) ? blog.likes.length : blog.likes || 0} ❤️</p>
           </div>
         </div>
       ))}

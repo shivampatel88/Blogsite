@@ -14,7 +14,8 @@ export default function BlogCard({ blog, onOpen, onToggleLike }) {
         <div className="p-3">
           <p className="text-xs opacity-60">{new Date(blog.createdAt).toLocaleDateString()}</p>
           <h3 className="mt-1 line-clamp-1 text-base font-semibold">{blog.title}</h3>
-          <p className="mt-1 text-sm opacity-80">by {blog.author.name}</p>
+          <p className="mt-1 text-sm opacity-80"> by {blog.author?.firstname} {blog.author?.lastname?.[0] || ""}
+          </p>
         </div>
       </button>
 
@@ -26,9 +27,9 @@ export default function BlogCard({ blog, onOpen, onToggleLike }) {
             blog.likedByMe
               ? "bg-rose-500/90 text-white"
               : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-          }`}
-        >
-          ♥ {blog.likes}
+          }`}>
+            ♥ {blog.likesCount ?? (Array.isArray(blog.likes) ? blog.likes.length : 0)}
+
         </button>
       </div>
     </article>

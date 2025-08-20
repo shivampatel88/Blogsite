@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 export default function Navbar({ user, dark, onToggleDark, onGo }) {
   const [open, setOpen] = useState(false);
   const initials = useMemo(
-    () => (user?.lastName?.[0] || user?.firstName?.[0] || "U").toUpperCase(),
+    () => (user?.lastname?.[0] || user?.firstname?.[0] || "U").toUpperCase(),
     [user]
   );
 
@@ -52,8 +52,7 @@ export default function Navbar({ user, dark, onToggleDark, onGo }) {
             <button
               onClick={() => setOpen((o) => !o)}
               className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-fuchsia-500/80 to-indigo-500/80 text-white shadow-lg ring-1 ring-white/20 transition-transform hover:scale-105"
-              title={`${user?.firstName} ${user?.lastName}`}
-            >
+              title={`${user?.firstname} ${user?.lastname}`}>
               <span className="font-semibold">{initials}</span>
             </button>
 
@@ -63,8 +62,8 @@ export default function Navbar({ user, dark, onToggleDark, onGo }) {
                 onMouseLeave={() => setOpen(false)}
               >
                 <div className="mb-2 rounded-xl bg-slate-100/60 p-3 text-sm dark:bg-white/10">
-                  <p className="font-medium">@{user.username}</p>
-                  <p className="opacity-70">{user.firstName} {user.lastName}</p>
+                  <p className="font-medium">@{user.email}</p>
+                  <p className="opacity-70">{user.firstname} {user.lastname}</p>
                 </div>
 
                 <div className="space-y-1 text-sm">

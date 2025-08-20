@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BlogCard from "../components/BlogCard";
 import BlogModal from "../components/BlogModal";
-import API_URL from "../api"; // axios/fetch base
+import API_URL from "../api"; // axios instance
 
 const CATEGORIES = ["All", "Business & Finance", "Travel", "Food", "Science & Technology"];
 
@@ -22,11 +22,11 @@ export default function Home() {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/blogs`);
-        const data = await res.json();
-        setBlogs(data);
+        const res = await API_URL.get("/blog"); // ✅ correct endpoint
+        setBlogs(res.data || []);
       } catch (err) {
         console.error("Error fetching blogs:", err);
+        setBlogs([]); // fallback
       } finally {
         setLoading(false);
       }
@@ -36,12 +36,11 @@ export default function Home() {
 
   // ---- Filter blogs ----
   const filtered = useMemo(() => {
-    const byCat =
-      category === "All" ? blogs : blogs.filter((b) => b.category === category);
+    const byCat = category === "All" ? blogs : blogs.filter((b) => b.category === category);
     if (!search.trim()) return byCat;
     return byCat.filter((b) =>
-      b.author?.firstname
-        ?.toLowerCase()
+      `${b.author?.firstname || ""} ${b.author?.lastname || ""}`
+        .toLowerCase()
         .includes(search.toLowerCase())
     );
   }, [blogs, category, search]);
@@ -55,27 +54,16 @@ export default function Home() {
           <div className="absolute -bottom-40 -right-40 h-[28rem] w-[28rem] rounded-full bg-cyan-400/10 blur-3xl" />
         </div>
 
-        <Navbar
-          user={CURRENT_USER}
-          dark={dark}
-          onToggleDark={() => setDark((d) => !d)}
-          onGo={(path) => {
+        <Navbar user={CURRENT_USER} dark={dark} onToggleDark={() => setDark((d) => !d)} onGo={(path) => {
             if (path === "/logout") {
               localStorage.removeItem("token");
               localStorage.removeItem("user");
               window.location.reload();
             }
-          }}
-        />
+          }}/>
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:gap-8 md:px-6 md:py-10">
-          <Sidebar
-            categories={CATEGORIES}
-            category={category}
-            onSelectCategory={setCategory}
-            search={search}
-            onSearch={setSearch}
-          />
+          <Sidebar categories={CATEGORIES} category={category} onSelectCategory={setCategory} search={search} onSearch={setSearch}/>
 
           {/* Blog Grid */}
           <section className="relative">
@@ -94,7 +82,7 @@ export default function Home() {
                   key={b._id}
                   blog={{
                     ...b,
-                    authorName: `${b.author?.firstname} ${b.author?.lastname?.[0] || ""}.`,
+                    authorName: `${b.author?.firstname || ""} ${b.author?.lastname?.[0] || ""}.`,
                   }}
                   onOpen={() => setSelected(b)}
                 />
@@ -109,6 +97,11 @@ export default function Home() {
             blog={selected}
             me={CURRENT_USER}
             onClose={() => setSelected(null)}
+            onLiked={(updatedBlog) => {
+            setBlogs((prev) =>
+              prev.map((b) => (b._id === updatedBlog._id ? updatedBlog : b))
+            );
+            }}
           />
         )}
       </div>
