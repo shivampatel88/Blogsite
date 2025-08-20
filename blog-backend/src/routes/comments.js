@@ -60,10 +60,18 @@ router.delete('/:blogId/:commentId', verifyToken, async (req, res) => {
 
     comment.remove();
     await blog.save();
-    res.json({ message: 'Comment deleted' });
+
+    await blog.populate('comments.user', 'username email');
+
+    res.json({
+      message: 'Comment deleted',
+      comments: blog.comments
+    });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 module.exports = router;
