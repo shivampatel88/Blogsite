@@ -8,12 +8,18 @@ import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 
 
-const CATEGORIES = ["All", "Business & Finance", "Travel", "Food", "Science & Technology"];
+const CATEGORIES = [
+  { value: "all", label: "All" },
+  { value: "business", label: "Business & Finance" },
+  { value: "travel", label: "Travel" },
+  { value: "food", label: "Food" },
+  { value: "technology", label: "Science & Technology" },
+];
 
 export default function Home() {
   const [dark, setDark] = useState(true);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState("all");
   const [blogs, setBlogs] = useState([]);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -71,7 +77,8 @@ export default function Home() {
 
   // ---- Filter blogs ----
   const filtered = useMemo(() => {
-    const byCat = category === "All" ? blogs : blogs.filter((b) => b.category === category);
+    // 3. This filtering logic now works correctly because it compares matching values (e.g., 'travel' === 'travel')
+    const byCat = category === "all" ? blogs : blogs.filter((b) => b.category === category);
     if (!search.trim()) return byCat;
     return byCat.filter((b) =>
       `${b.author?.firstname || ""} ${b.author?.lastname || ""}`
@@ -79,6 +86,8 @@ export default function Home() {
         .includes(search.toLowerCase())
     );
   }, [blogs, category, search]);
+
+  const categoryLabel = CATEGORIES.find(c => c.value === category)?.label;
 
   const handleBlogDeleteSuccess = () => {
     setSelected(null); // Close the modal
@@ -133,7 +142,7 @@ export default function Home() {
           <section className="relative">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold">
-                {category === "All" ? "All" : category} Blogs
+                {categoryLabel} Blogs
               </h2>
               <p className="text-sm opacity-70">
                 {loading ? "Loading..." : `${filtered.length} results`}
