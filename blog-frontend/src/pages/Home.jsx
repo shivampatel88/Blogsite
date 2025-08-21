@@ -16,23 +16,52 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const CURRENT_USER = JSON.parse(localStorage.getItem("user")) || null;
+  const ME_ID = CURRENT_USER?._id || null; // ✅ ADDED: Current logged-in user id
 
-  // ---- Fetch blogs from backend ----
+  // ✅ ADDED: Normalize each blog with likesCount & likedByMe
+  const normalizeBlog = (b) => ({
+    ...b,
+    likesCount: Array.isArray(b.likes) ? b.likes.length : 0,
+    likedByMe: Array.isArray(b.likes)
+      ? b.likes.some((id) => String(id) === String(ME_ID))
+      : false,
+  });
+
+  // ---- Fetch blogs ----
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const res = await API_URL.get("/blog"); // ✅ correct endpoint
-        setBlogs(res.data || []);
+        const res = await API_URL.get("/blog");
+        const serverBlogs = res.data || [];
+        setBlogs(serverBlogs.map(normalizeBlog)); // ✅ CHANGED: normalize data before saving
       } catch (err) {
         console.error("Error fetching blogs:", err);
-        setBlogs([]); // fallback
+        setBlogs([]);
       } finally {
         setLoading(false);
       }
     };
     fetchBlogs();
-  }, []);
+  }, [ME_ID]); // ✅ CHANGED: include ME_ID so likedByMe stays accurate
+
+  // ✅ ADDED: Toggle like handler (updates grid + modal if open)
+  const handleToggleLike = async (blogId) => {
+    try {
+      const res = await API_URL.put(`/likes/${blogId}/toggle`);
+      const { likesCount, liked } = res.data || {};
+      setBlogs((prev) =>
+        prev.map((b) =>
+          b._id === blogId ? { ...b, likesCount, likedByMe: liked } : b
+        )
+      );
+      if (selected?._id === blogId) {
+        setSelected((prev) => ({ ...prev, likesCount, likedByMe: liked }));
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
 
   // ---- Filter blogs ----
   const filtered = useMemo(() => {
@@ -48,21 +77,28 @@ export default function Home() {
   return (
     <div className={dark ? "dark" : ""}>
       <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0b0e14] dark:text-slate-100">
-        {/* Subtle background accents */}
         <div aria-hidden className="pointer-events-none fixed inset-0">
           <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl" />
           <div className="absolute -bottom-40 -right-40 h-[28rem] w-[28rem] rounded-full bg-cyan-400/10 blur-3xl" />
         </div>
 
-        <Navbar user={CURRENT_USER} dark={dark} onToggleDark={() => setDark((d) => !d)} onGo={(path) => {
+        {/* Navbar */}
+        <Navbar
+          user={CURRENT_USER}
+          dark={dark}
+          onToggleDark={() => setDark((d) => !d)}
+          onGo={(path) => {
             if (path === "/logout") {
               localStorage.removeItem("token");
               localStorage.removeItem("user");
               window.location.reload();
             }
-          }}/>
+          }}
+        />
 
+        {/* Main Layout */}
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:gap-8 md:px-6 md:py-10">
+          {/* Sidebar */}
           <Sidebar categories={CATEGORIES} category={category} onSelectCategory={setCategory} search={search} onSearch={setSearch}/>
 
           {/* Blog Grid */}
@@ -78,13 +114,13 @@ export default function Home() {
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((b) => (
-                <BlogCard
-                  key={b._id}
+                <BlogCard key={b._id}
                   blog={{
                     ...b,
                     authorName: `${b.author?.firstname || ""} ${b.author?.lastname?.[0] || ""}.`,
                   }}
                   onOpen={() => setSelected(b)}
+                  onToggleLike={() => handleToggleLike(b._id)} // ✅ ADDED
                 />
               ))}
             </div>
@@ -97,10 +133,12 @@ export default function Home() {
             blog={selected}
             me={CURRENT_USER}
             onClose={() => setSelected(null)}
-            onLiked={(updatedBlog) => {
-            setBlogs((prev) =>
-              prev.map((b) => (b._id === updatedBlog._id ? updatedBlog : b))
-            );
+            onLikeUpdate={(blogId, likesCount, likedByMe) => {
+              setBlogs((prev) =>
+                prev.map((b) =>
+                 b._id === blogId ? { ...b, likesCount, likedByMe } : b
+              )
+             );
             }}
           />
         )}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import API_URL from "../api"; // your axios/fetch base URL
 
-export default function BlogModal({ blog, me, onClose }) {
+export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // ✅ CHANGED: added onToggleLike prop
   const [currentBlog, setCurrentBlog] = useState(blog);
   const [text, setText] = useState("");
   const [loadingComments, setLoadingComments] = useState(false);
@@ -14,7 +14,6 @@ export default function BlogModal({ blog, me, onClose }) {
       try {
         setLoadingComments(true);
         const res = await API_URL.get(`/comments/${currentBlog._id}`);
-        // const data = await res.json();
         setCurrentBlog((prev) => ({ ...prev, comments: res.data || [] }));
       } catch (err) {
         console.error("Error fetching comments:", err);
@@ -28,16 +27,21 @@ export default function BlogModal({ blog, me, onClose }) {
   // ---- Toggle Like ----
   const handleToggleLike = async () => {
     try {
-      const res = await API_URL.put(`/likes/${currentBlog._id}/toggle`,
+      const res = await API_URL.put(
+        `/likes/${currentBlog._id}/toggle`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // const data = await res.json();
       setCurrentBlog((prev) => ({
         ...prev,
-        likesCount: res.data.likesCount,   // new field
+        likesCount: res.data.likesCount,
         likedByMe: res.data.liked,
       }));
+
+      if (onLikeUpdate) { 
+        onLikeUpdate(currentBlog._id, res.data.likesCount, res.data.liked);
+      }
+      
     } catch (err) {
       console.error("Error toggling like:", err);
     }
@@ -52,7 +56,6 @@ export default function BlogModal({ blog, me, onClose }) {
         { text },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // const data = await res.json();
       setCurrentBlog((prev) => ({ ...prev, comments: res.data.comments }));
       setText("");
     } catch (err) {
@@ -66,14 +69,15 @@ export default function BlogModal({ blog, me, onClose }) {
       const res = await API_URL.delete(`/comments/${currentBlog._id}/${commentId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (res.status === 200) {
+      if (res.status === 200) {   // ✅ CHANGED: use res.status instead of res.ok
         setCurrentBlog((prev) => ({
           ...prev,
           comments: prev.comments.filter((c) => c._id !== commentId),
         }));
       }
     } catch (err) {
-      console.error("Error deleting comment:", err);      }
+      console.error("Error deleting comment:", err);
+    }
   };
 
   return (
@@ -94,8 +98,9 @@ export default function BlogModal({ blog, me, onClose }) {
               currentBlog.likedByMe
                 ? "bg-rose-500/90 text-white"
                 : "bg-white/60 hover:bg-white dark:bg-white/10"
-            }`}>
-            ♥  {currentBlog.likesCount ?? (Array.isArray(currentBlog.likes) ? currentBlog.likes.length : 0)}  
+            }`}
+          >
+            ♥ {currentBlog.likesCount ?? (Array.isArray(currentBlog.likes) ? currentBlog.likes.length : 0)}
           </button>
         </div>
 
@@ -114,31 +119,39 @@ export default function BlogModal({ blog, me, onClose }) {
               <div className="mb-2 flex flex-wrap items-center gap-2 text-sm opacity-70">
                 <span>{new Date(currentBlog.createdAt).toLocaleString()}</span>
                 <span>•</span>
-                <span>By {currentBlog.author?.firstname} {currentBlog.author?.lastname}</span>
+                <span>
+                  By {currentBlog.author?.firstname} {currentBlog.author?.lastname}
+                </span>
                 <span>•</span>
                 <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs dark:bg-white/10">
                   {currentBlog.category}
                 </span>
               </div>
 
-              <h2 className="mb-2 text-xl font-bold sm:text-2xl">
-                {currentBlog.title}
-              </h2>
+              <h2 className="mb-2 text-xl font-bold sm:text-2xl">{currentBlog.title}</h2>
               <p className="leading-relaxed opacity-90">{currentBlog.content}</p>
 
               {/* Comments */}
               <div className="mt-8">
                 <h3 className="mb-3 text-lg font-semibold">Comments</h3>
 
-                <form onSubmit={(e) => {
+                <form
+                  onSubmit={(e) => {
                     e.preventDefault();
                     handleAddComment();
                   }}
-                  className="mb-4 flex gap-2">
-                  <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Write a comment…"
-                    className="flex-1 rounded-xl border border-slate-200/60 bg-white/70 px-3 py-2 text-sm outline-none placeholder:opacity-50 focus:border-indigo-300 dark:border-white/10 dark:bg-white/10"/>
-                  <button type="submit"
-                    className="rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-600">
+                  className="mb-4 flex gap-2"
+                >
+                  <input
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    placeholder="Write a comment…"
+                    className="flex-1 rounded-xl border border-slate-200/60 bg-white/70 px-3 py-2 text-sm outline-none placeholder:opacity-50 focus:border-indigo-300 dark:border-white/10 dark:bg-white/10"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-xl bg-indigo-500 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-600"
+                  >
                     Post
                   </button>
                 </form>
@@ -148,31 +161,31 @@ export default function BlogModal({ blog, me, onClose }) {
                 ) : (
                   <ul className="space-y-3">
                     {currentBlog.comments?.map((c) => (
-                      <li key={c._id}
-                        className="rounded-xl border border-slate-200/60 bg-white/70 p-3 text-sm dark:border-white/10 dark:bg-white/5">
+                      <li
+                        key={c._id}
+                        className="rounded-xl border border-slate-200/60 bg-white/70 p-3 text-sm dark:border-white/10 dark:bg-white/5"
+                      >
                         <div className="mb-1 flex items-center justify-between">
-                          <span className="font-medium">
-                            {c.user?.username}
-                          </span>
+                          <span className="font-medium">{c.user?.username}</span>
                           <span className="opacity-60 text-xs">
                             {new Date(c.createdAt).toLocaleString()}
                           </span>
                         </div>
                         <p className="opacity-90">{c.text}</p>
                         {c.user?._id && me?._id && c.user._id === me._id && (
-                        <div className="mt-2 text-right">
-                          <button onClick={() => handleDeleteComment(c._id)}
-                            className="rounded-lg px-2 py-1 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10">
-                            Delete
-                          </button>
-                        </div>
-                          )}
+                          <div className="mt-2 text-right">
+                            <button
+                              onClick={() => handleDeleteComment(c._id)}
+                              className="rounded-lg px-2 py-1 text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
                       </li>
                     ))}
                     {currentBlog.comments?.length === 0 && (
-                      <p className="opacity-60 text-sm">
-                        No comments yet. Be the first!
-                      </p>
+                      <p className="opacity-60 text-sm">No comments yet. Be the first!</p>
                     )}
                   </ul>
                 )}

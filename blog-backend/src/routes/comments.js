@@ -58,7 +58,7 @@ router.delete('/:blogId/:commentId', verifyToken, async (req, res) => {
       return res.status(403).json({ message: 'Not allowed to delete this comment' });
     }
 
-    comment.remove();
+    blog.comments.pull({ _id: commentId });
     await blog.save();
 
     await blog.populate('comments.user', 'firstname lastname email');

@@ -1,4 +1,4 @@
-export default function BlogCard({ blog, onOpen, onToggleLike }) {
+export default function BlogCard({ blog, onOpen}) {
   return (
     <article
       className="group overflow-hidden rounded-2xl border border-slate-200/60 bg-white/70 shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:shadow-lg dark:border-white/10 dark:bg-white/5"
@@ -21,16 +21,11 @@ export default function BlogCard({ blog, onOpen, onToggleLike }) {
 
       <div className="flex items-center justify-between border-t border-slate-200/60 px-3 py-2 text-sm dark:border-white/10">
         <span className="rounded-full bg-slate-100 px-2 py-1 text-xs dark:bg-white/10">{blog.category}</span>
-        <button
-          onClick={onToggleLike}
-          className={`rounded-full px-3 py-1 transition ${
-            blog.likedByMe
-              ? "bg-rose-500/90 text-white"
-              : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
-          }`}>
+        <span className={`rounded-full px-3 py-1 ${
+            blog.likedByMe ? "bg-rose-500/90 text-white" : "bg-slate-100 text-slate-700 dark:bg-white/10 dark:text-white"}`}>
             ♥ {blog.likesCount ?? (Array.isArray(blog.likes) ? blog.likes.length : 0)}
 
-        </button>
+        </span>
       </div>
     </article>
   );
