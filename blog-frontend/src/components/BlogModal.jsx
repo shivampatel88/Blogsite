@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import API_URL from "../api"; // your axios/fetch base URL
 import { useNavigate } from "react-router-dom";
 
-export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // ✅ CHANGED: added onToggleLike prop
+export default function BlogModal({ blog, me, onClose,  onLikeUpdate, onDeleteSuccess}) {   // ✅ CHANGED: added onToggleLike prop
   const [currentBlog, setCurrentBlog] = useState(blog);
   const [text, setText] = useState("");
   const [loadingComments, setLoadingComments] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+
+  
   // Fetch comments when modal opens
   useEffect(() => {
     const fetchComments = async () => {
@@ -87,8 +89,9 @@ export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // �
       headers: { Authorization: `Bearer ${token}` },
     });
     if (res.status === 200) {
-      alert("Your Blog is successfully deleted");
-      navigate("/home");   // ✅ Go back to home
+      if (onDeleteSuccess) {
+          onDeleteSuccess();
+        }   // ✅ Go back to home
     }
   } catch (err) {
     console.error("Error deleting blog:", err);

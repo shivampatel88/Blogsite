@@ -8,7 +8,7 @@ const verifyToken = require('../middleware/authMiddleware');
 router.get('/', getAllBlogs);
 router.get('/:id', getBlogById);
 router.post("/", verifyToken, upload.single("banner"), createBlog);
-router.put('/:id', verifyToken, updateBlog);
+router.put('/:id', verifyToken, upload.single("banner"), updateBlog);
 router.delete('/:id', verifyToken, deleteBlog);
 
 module.exports = router;

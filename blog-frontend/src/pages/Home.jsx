@@ -1,9 +1,12 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BlogCard from "../components/BlogCard";
 import BlogModal from "../components/BlogModal";
 import API_URL from "../api"; // axios instance
+import { motion } from "framer-motion";
+import { CheckCircle2 } from "lucide-react";
+
 
 const CATEGORIES = ["All", "Business & Finance", "Travel", "Food", "Science & Technology"];
 
@@ -14,6 +17,7 @@ export default function Home() {
   const [blogs, setBlogs] = useState([]);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: "" });
 
   const CURRENT_USER = JSON.parse(localStorage.getItem("user")) || null;
   const ME_ID = CURRENT_USER?._id || null; // ✅ ADDED: Current logged-in user id
@@ -27,25 +31,25 @@ export default function Home() {
       : false,
   });
 
-  // ---- Fetch blogs ----
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        const res = await API_URL.get("/blog");
-        const serverBlogs = res.data || [];
-        setBlogs(serverBlogs.map(normalizeBlog));
-      } catch (err) {
-        console.error("Error fetching blogs:", err);
-        setBlogs([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBlogs();
+ // 2. Define fetchBlogs wrapped in useCallback
+  const fetchBlogs = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await API_URL.get("/blog");
+      const serverBlogs = res.data || [];
+      setBlogs(serverBlogs.map(normalizeBlog));
+    } catch (err) {
+      console.error("Error fetching blogs:", err);
+      setBlogs([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [ME_ID]); // Dependency array for useCallback
 
-    useEffect(() => {
-      fetchBlogs();
-    }, [ME_ID]);
+    // 3. Call fetchBlogs on initial component mount
+  useEffect(() => {
+    fetchBlogs();
+  }, [fetchBlogs]); // fetchBlogs is now a stable dependency
 
   // ✅ ADDED: Toggle like handler (updates grid + modal if open)
   const handleToggleLike = async (blogId) => {
@@ -76,6 +80,17 @@ export default function Home() {
     );
   }, [blogs, category, search]);
 
+  const handleBlogDeleteSuccess = () => {
+    setSelected(null); // Close the modal
+    fetchBlogs(); // Refresh the blog list to remove the deleted one
+    setToast({ show: true, message: "Your blog was successfully deleted!" }); // Show the toast
+
+    // Automatically hide the toast after 3 seconds
+    setTimeout(() => {
+      setToast({ show: false, message: "" });
+    }, 3000);
+  };
+
   return (
     <div className={dark ? "dark" : ""}>
       <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0b0e14] dark:text-slate-100">
@@ -84,6 +99,17 @@ export default function Home() {
           <div className="absolute -bottom-40 -right-40 h-[28rem] w-[28rem] rounded-full bg-cyan-400/10 blur-3xl" />
         </div>
 
+        {toast.show && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-xl bg-emerald-500/90 px-5 py-3 text-white shadow-lg"
+          >
+            <CheckCircle2 size={20} />
+            <span>{toast.message}</span>
+          </motion.div>
+        )}
         {/* Navbar */}
         <Navbar
           user={CURRENT_USER}
@@ -137,6 +163,7 @@ export default function Home() {
             onClose={() => {setSelected(null);
               fetchBlogs();
             }}
+            onDeleteSuccess={handleBlogDeleteSuccess}
             onLikeUpdate={(blogId, likesCount, likedByMe) => {
               setBlogs((prev) =>
                 prev.map((b) =>
