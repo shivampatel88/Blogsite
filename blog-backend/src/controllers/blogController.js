@@ -63,7 +63,14 @@ exports.updateBlog = async (req, res) => {
     blog.title = req.body.title || blog.title;
     blog.content = req.body.content || blog.content;
     blog.category = req.body.category || blog.category;
-
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "blog_banners",
+      });
+      blog.bannerImage = result.secure_url;
+      fs.unlinkSync(req.file.path);
+    }
+    
     await blog.save();
     res.json({ message: "Blog updated", blog });
   } catch (err) {
