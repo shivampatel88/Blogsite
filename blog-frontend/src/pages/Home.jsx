@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import BlogCard from "../components/BlogCard";
@@ -25,7 +26,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [showMyBlogsOnly, setShowMyBlogsOnly] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "" });
-
+  const navigate = useNavigate();
   const CURRENT_USER = JSON.parse(localStorage.getItem("user")) || null;
   const ME_ID = CURRENT_USER?._id || null; // ✅ ADDED: Current logged-in user id
 
@@ -134,13 +135,7 @@ export default function Home() {
               setShowMyBlogsOnly(true);
               setCategory("all"); // Reset category to 'all' for clarity
           }}
-          onGo={(path) => {
-            if (path === "/logout") {
-              localStorage.removeItem("token");
-              localStorage.removeItem("user");
-              window.location.reload();
-            }
-          }}
+          onGo={(path) => navigate(path)} // 3. Add this line
         />
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:gap-8 md:px-6 md:py-10">

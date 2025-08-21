@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import logo from "../assets/logo.png"; // 1. Import the logo image
 
 
@@ -65,18 +65,15 @@ export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }
                 </div>
 
                 <div className="space-y-1 text-sm">
-                   <button onClick={onShowMyBlogs} className="w-full rounded-lg px-3 py-2 text-left text-slate-300 hover:bg-slate-700">
-                    My blogs
-                   </button>
-                  <button className="w-full rounded-lg px-3 py-2 text-left text-slate-300 hover:bg-slate-700">
-                    Settings
-                  </button>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full rounded-lg px-3 py-2 text-left text-rose-400 hover:bg-rose-500/20 transition"
-                  >
-                    Logout
-                  </button>
+                  <Link to="/home" className="opacity-80 hover:opacity-100 transition text-slate-300">
+                    Home
+                  </Link>
+                  <Link to="/about" className="opacity-80 hover:opacity-100 transition text-slate-300">
+                    About us
+                  </Link>
+                  <Link to="/contact" className="opacity-80 hover:opacity-100 transition text-slate-300">
+                    Contact us
+                  </Link>
                 </div>
               </div>
             )}
