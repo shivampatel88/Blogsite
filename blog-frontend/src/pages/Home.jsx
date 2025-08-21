@@ -28,13 +28,12 @@ export default function Home() {
   });
 
   // ---- Fetch blogs ----
-  useEffect(() => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
         const res = await API_URL.get("/blog");
         const serverBlogs = res.data || [];
-        setBlogs(serverBlogs.map(normalizeBlog)); // ✅ CHANGED: normalize data before saving
+        setBlogs(serverBlogs.map(normalizeBlog));
       } catch (err) {
         console.error("Error fetching blogs:", err);
         setBlogs([]);
@@ -43,7 +42,10 @@ export default function Home() {
       }
     };
     fetchBlogs();
-  }, [ME_ID]); // ✅ CHANGED: include ME_ID so likedByMe stays accurate
+
+    useEffect(() => {
+      fetchBlogs();
+    }, [ME_ID]);
 
   // ✅ ADDED: Toggle like handler (updates grid + modal if open)
   const handleToggleLike = async (blogId) => {
@@ -132,7 +134,9 @@ export default function Home() {
           <BlogModal
             blog={selected}
             me={CURRENT_USER}
-            onClose={() => setSelected(null)}
+            onClose={() => {setSelected(null);
+              fetchBlogs();
+            }}
             onLikeUpdate={(blogId, likesCount, likedByMe) => {
               setBlogs((prev) =>
                 prev.map((b) =>

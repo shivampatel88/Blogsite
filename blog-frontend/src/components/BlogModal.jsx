@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import API_URL from "../api"; // your axios/fetch base URL
+import { useNavigate } from "react-router-dom";
 
 export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // ‚úÖ CHANGED: added onToggleLike prop
   const [currentBlog, setCurrentBlog] = useState(blog);
   const [text, setText] = useState("");
   const [loadingComments, setLoadingComments] = useState(false);
-
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   // Fetch comments when modal opens
@@ -41,7 +42,7 @@ export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // ‚
       if (onLikeUpdate) { 
         onLikeUpdate(currentBlog._id, res.data.likesCount, res.data.liked);
       }
-      
+
     } catch (err) {
       console.error("Error toggling like:", err);
     }
@@ -80,6 +81,21 @@ export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // ‚
     }
   };
 
+  const handleDeleteBlog = async () => {
+  try {
+    const res = await API_URL.delete(`/blog/${currentBlog._id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 200) {
+      alert("Your Blog is successfully deleted");
+      navigate("/home");   // ‚úÖ Go back to home
+    }
+  } catch (err) {
+    console.error("Error deleting blog:", err);
+  }
+};
+
+
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-3 sm:p-6">
       <div className="max-h-[92vh] w-full max-w-4xl overflow-hidden rounded-3xl border border-white/10 bg-white/90 backdrop-blur-2xl dark:bg-[#0c0f15]/90 transition-all duration-300">
@@ -91,6 +107,19 @@ export default function BlogModal({ blog, me, onClose,  onLikeUpdate }) {   // ‚
           >
             ‚Üê Back
           </button>
+
+          {me?._id === currentBlog.author?._id && (
+          <div className="flex gap-2">
+            <button onClick={() => navigate(`/edit/${currentBlog._id}`)}
+            className="rounded-lg px-3 py-1 text-sm bg-blue-500 text-white">
+            Edit
+            </button>
+            <button onClick={handleDeleteBlog}
+            className="rounded-lg px-3 py-1 text-sm bg-red-500 text-white">
+            Delete
+            </button>
+          </div>
+          )}
 
           <button
             onClick={handleToggleLike}
