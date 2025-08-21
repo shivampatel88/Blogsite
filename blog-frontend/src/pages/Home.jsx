@@ -23,6 +23,7 @@ export default function Home() {
   const [blogs, setBlogs] = useState([]);
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showMyBlogsOnly, setShowMyBlogsOnly] = useState(false);
   const [toast, setToast] = useState({ show: false, message: "" });
 
   const CURRENT_USER = JSON.parse(localStorage.getItem("user")) || null;
@@ -75,17 +76,22 @@ export default function Home() {
     }
   };
 
-  // ---- Filter blogs ----
   const filtered = useMemo(() => {
-    // 3. This filtering logic now works correctly because it compares matching values (e.g., 'travel' === 'travel')
-    const byCat = category === "all" ? blogs : blogs.filter((b) => b.category === category);
+    let blogsToFilter = blogs;
+
+    if (showMyBlogsOnly) {
+      blogsToFilter = blogs.filter(b =>b.author?._id === ME_ID);
+    }
+    
+    const byCat = category === "all" ? blogsToFilter : blogsToFilter.filter((b) => b.category === category);
+
     if (!search.trim()) return byCat;
     return byCat.filter((b) =>
       `${b.author?.firstname || ""} ${b.author?.lastname || ""}`
         .toLowerCase()
         .includes(search.toLowerCase())
     );
-  }, [blogs, category, search]);
+  }, [blogs, category, search, showMyBlogsOnly, ME_ID]);
 
   const categoryLabel = CATEGORIES.find(c => c.value === category)?.label;
 
@@ -124,6 +130,10 @@ export default function Home() {
           user={CURRENT_USER}
           dark={dark}
           onToggleDark={() => setDark((d) => !d)}
+          onShowMyBlogs={() => {
+              setShowMyBlogsOnly(true);
+              setCategory("all"); // Reset category to 'all' for clarity
+          }}
           onGo={(path) => {
             if (path === "/logout") {
               localStorage.removeItem("token");
@@ -133,16 +143,19 @@ export default function Home() {
           }}
         />
 
-        {/* Main Layout */}
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:gap-8 md:px-6 md:py-10">
-          {/* Sidebar */}
-          <Sidebar categories={CATEGORIES} category={category} onSelectCategory={setCategory} search={search} onSearch={setSearch}/>
+          <Sidebar categories={CATEGORIES} category={category} onSelectCategory={(cat) => {
+              setCategory(cat);
+              setShowMyBlogsOnly(false);
+            }} 
+            search={search} 
+            onSearch={setSearch}
+          />
 
-          {/* Blog Grid */}
           <section className="relative">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold">
-                {categoryLabel} Blogs
+                {showMyBlogsOnly ? "My Blogs" : `${categoryLabel} Blogs`}
               </h2>
               <p className="text-sm opacity-70">
                 {loading ? "Loading..." : `${filtered.length} results`}

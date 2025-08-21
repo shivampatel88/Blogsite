@@ -1,6 +1,7 @@
-// Navbar.jsx
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png"; // 1. Import the logo image
+
 
 export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }) {
   const [open, setOpen] = useState(false);
@@ -21,9 +22,7 @@ export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }
     <header className="relative z-10 border-b border-slate-200/60 bg-white/70 backdrop-blur-md dark:border-white/10 dark:bg-white/5 transition-colors duration-500">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
         <div className="flex items-center gap-3">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-500/70 to-cyan-400/70 text-white shadow-md ring-1 ring-white/20 transition-all">
-            <span className="text-lg font-bold">B</span>
-          </div>
+            <img src={logo} alt="Logo" className="h-8 w-8 object-cover rounded-full" />
           <span className="text-base font-semibold tracking-wide">BlogSite</span>
         </div>
 
