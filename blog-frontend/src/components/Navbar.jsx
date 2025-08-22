@@ -47,33 +47,32 @@ export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }
           </button>
 
           <div className="relative">
-            <button
-              onClick={() => setOpen((o) => !o)}
+            <button onClick={() => setOpen((o) => !o)}
               className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-fuchsia-500/80 to-indigo-500/80 text-white shadow-lg ring-1 ring-white/20 transition-transform hover:scale-105"
               title={`${user?.firstname} ${user?.lastname}`}>
               <span className="font-semibold">{initials}</span>
             </button>
 
              {open && (
-              <div
-                className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-2xl animate-fadeIn"
-                onMouseLeave={() => setOpen(false)}
-              >
+              <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-2xl animate-fadeIn"
+                onMouseLeave={() => setOpen(false)}>
                 <div className="mb-2 rounded-xl bg-slate-700/50 p-3 text-sm">
-                  <p className="font-medium text-slate-200">@{user.email}</p>
+                  <p className="font-medium text-slate-200">{user.email}</p>
                   <p className="text-slate-400">{user.firstname} {user.lastname}</p>
                 </div>
 
                 <div className="space-y-1 text-sm">
-                  <Link to="/home" className="opacity-80 hover:opacity-100 transition text-slate-300">
-                    Home
-                  </Link>
-                  <Link to="/about" className="opacity-80 hover:opacity-100 transition text-slate-300">
-                    About us
-                  </Link>
-                  <Link to="/contact" className="opacity-80 hover:opacity-100 transition text-slate-300">
-                    Contact us
-                  </Link>
+                   <button onClick={onShowMyBlogs} className="w-full rounded-lg px-3 py-2 text-left text-slate-300 hover:bg-slate-700">
+                    My blogs
+                   </button>
+                  <button className="w-full rounded-lg px-3 py-2 text-left text-slate-300 hover:bg-slate-700">
+                    Settings
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full rounded-lg px-3 py-2 text-left text-rose-400 hover:bg-rose-500/20 transition">
+                    Logout
+                  </button>
                 </div>
               </div>
             )}
