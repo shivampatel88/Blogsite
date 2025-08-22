@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './context/ThemeContext'; 
 import LandingPage from "./pages/LandingPage";
 import SignIn from './components/Signin';
 import SignUp from './components/signup';
@@ -11,6 +12,7 @@ import ContactPage from './pages/Contact'; // Import ContactPage
 import './index.css'
 
 createRoot(document.getElementById('root')).render(
+  <ThemeProvider>
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<LandingPage/>} />
@@ -23,5 +25,6 @@ createRoot(document.getElementById('root')).render(
       <Route path="/contact" element={<ContactPage />} />
     </Routes>
   </BrowserRouter>
+  </ThemeProvider>
 );
 

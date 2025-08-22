@@ -1,11 +1,14 @@
 import { useMemo, useState } from "react";
 import { useNavigate,Link } from "react-router-dom";
-import logo from "../assets/logo.png"; // 1. Import the logo image
+import { useTheme } from "../context/ThemeContext"; 
+import logo from "../assets/logo.png";
 
 
 export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { dark, toggleTheme } = useTheme(); 
+
 
   const initials = useMemo(
     () => (user?.lastname?.[0] || user?.firstname?.[0] || "U").toUpperCase(),
@@ -27,23 +30,25 @@ export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }
         </div>
 
         <nav className="hidden items-center gap-6 text-sm md:flex">
-          <button onClick={() => onGo?.("/home")} className="opacity-80 hover:opacity-100 transition">
-            Home
-          </button>
-          <button onClick={() => onGo?.("/about")} className="opacity-80 hover:opacity-100 transition">
-            About us
-          </button>
-          <button onClick={() => onGo?.("/contact")} className="opacity-80 hover:opacity-100 transition">
-            Contact us
-          </button>
+          <button onClick={() => onGo?.("/home")} className="opacity-80 hover:opacity-100 transition">Home</button>
+          <button onClick={() => onGo?.("/about")} className="opacity-80 hover:opacity-100 transition">About us</button>
+          <button onClick={() => onGo?.("/contact")} className="opacity-80 hover:opacity-100 transition">Contact us</button>
         </nav>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={onToggleDark}
-            className="rounded-full border border-slate-200/60 bg-white/70 px-3 py-1 text-sm backdrop-blur transition-all duration-300 hover:scale-105 hover:bg-white/90 dark:border-white/10 dark:bg-white/10 dark:hover:bg-white/20"
-          >
-            {dark ? "🌙 Dark" : "☀️ Light"}
+          <button onClick={toggleTheme}
+            className="relative h-8 w-14 rounded-full flex items-center justify-center border border-slate-200/60 dark:border-white/10 bg-slate-200/50 dark:bg-slate-800/50 transition-colors duration-500">
+            <AnimatePresence>
+              {dark ? (
+                <motion.div key="moon" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }}>
+                  <Moon size={16} className="text-yellow-300" />
+                </motion.div>
+              ) : (
+                <motion.div key="sun" initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }}>
+                  <Sun size={16} className="text-orange-500" />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </button>
 
           <div className="relative">
