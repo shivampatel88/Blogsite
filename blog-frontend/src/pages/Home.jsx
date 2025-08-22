@@ -18,7 +18,6 @@ const CATEGORIES = [
 ];
 
 export default function Home() {
-  const [dark, setDark] = useState(true);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [blogs, setBlogs] = useState([]);
@@ -108,7 +107,7 @@ export default function Home() {
   };
 
   return (
-    <div className={dark ? "dark" : ""}>
+    
       <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-[#0b0e14] dark:text-slate-100">
         <div aria-hidden className="pointer-events-none fixed inset-0">
           <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-indigo-400/10 blur-3xl" />
@@ -120,22 +119,19 @@ export default function Home() {
             initial={{ opacity: 0, y: 50, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-xl bg-emerald-500/90 px-5 py-3 text-white shadow-lg"
-          >
+            className="fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-xl bg-emerald-500/90 px-5 py-3 text-white shadow-lg">
             <CheckCircle2 size={20} />
             <span>{toast.message}</span>
           </motion.div>
         )}
-        {/* Navbar */}
+        
         <Navbar
           user={CURRENT_USER}
-          dark={dark}
-          onToggleDark={() => setDark((d) => !d)}
           onShowMyBlogs={() => {
               setShowMyBlogsOnly(true);
-              setCategory("all"); // Reset category to 'all' for clarity
+              setCategory("all"); 
           }}
-          onGo={(path) => navigate(path)} // 3. Add this line
+          onGo={(path) => navigate(path)} 
         />
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:gap-8 md:px-6 md:py-10">
@@ -144,8 +140,7 @@ export default function Home() {
               setShowMyBlogsOnly(false);
             }} 
             search={search} 
-            onSearch={setSearch}
-          />
+            onSearch={setSearch}/>
 
           <section className="relative">
             <div className="mb-4 flex items-center justify-between">
@@ -165,14 +160,13 @@ export default function Home() {
                     authorName: `${b.author?.firstname || ""} ${b.author?.lastname?.[0] || ""}.`,
                   }}
                   onOpen={() => setSelected(b)}
-                  onToggleLike={() => handleToggleLike(b._id)} // ✅ ADDED
+                  onToggleLike={() => handleToggleLike(b._id)} 
                 />
               ))}
             </div>
           </section>
         </div>
 
-        {/* Blog Modal */}
         {selected && (
           <BlogModal
             blog={selected}
@@ -191,6 +185,5 @@ export default function Home() {
           />
         )}
       </div>
-    </div>
   );
 }
