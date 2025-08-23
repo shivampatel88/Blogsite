@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext'; 
+import ThemeProvider from './context/ThemeContext'; // Use the default import
 import LandingPage from "./pages/LandingPage";
 import SignIn from './components/Signin';
 import SignUp from './components/signup';

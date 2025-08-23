@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
 import { useNavigate,Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext"; 
+import { useTheme } from "../context/ThemeContext"; // Update the import path
+import { Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import logo from "../assets/logo.png";
 
 
-export default function Navbar({ user, dark, onToggleDark, onGo, onShowMyBlogs }) {
+export default function Navbar({ user, onGo, onShowMyBlogs }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { dark, toggleTheme } = useTheme(); 
