@@ -1,6 +1,6 @@
 # BlogSite: A Modern Full-Stack Blogging Platform
 
-![BlogSite Screenshot](![alt text](image.png))
+![alt text](image.png)
 
 Welcome to BlogSite, a feature-rich, full-stack blogging application built with the MERN stack (MongoDB, Express.js, React, Node.js). This platform provides a seamless and intuitive experience for writers to share their stories and for readers to discover and engage with content. The application features a sleek, modern UI with a dark mode, full CRUD (Create, Read, Update, Delete) functionality for blogs, and interactive features like comments and likes.
 
@@ -101,36 +101,6 @@ The frontend is configured with a proxy in `vite.config.js`, so any API calls to
 ## 📂 Project Structure
 
 The project is organized into a `blog-backend` and a `blog-frontend` directory, promoting a clean separation of concerns.
-
-
-/blogsite
-├── /blog-backend
-│   ├── /src
-│   │   ├── /controllers  # Core logic for handling requests
-│   │   ├── /middleware   # Functions that run before controllers (e.g., auth)
-│   │   ├── /models       # Mongoose schemas for the database
-│   │   ├── /routes       # API route definitions
-│   │   └── /utils        # Utility functions (e.g., Cloudinary config)
-│   ├── .env.example      # Example environment variables
-│   ├── package.json
-│   └── server.js         # Main backend server entry point
-│
-└── /blog-frontend
-├── /src
-│   ├── /assets       # Images, logos, and other static files
-│   ├── /components   # Reusable React components (Navbar, BlogCard, etc.)
-│   ├── /context      # React Context for global state (e.g., ThemeContext)
-│   ├── /hooks        # Custom React hooks (e.g., useTheme)
-│   ├── /pages        # Page-level components (Home, CreateBlog, etc.)
-│   ├── api.js        # Axios configuration for API calls
-│   ├── index.css     # Global CSS and Tailwind directives
-│   └── main.jsx      # Main frontend entry point
-├── index.html
-├── package.json
-└── tailwind.config.js # Tailwind CSS configuration
-
-
----
 
 ## 📖 API Endpoints
 
