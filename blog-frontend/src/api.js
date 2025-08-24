@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const API_URL = axios.create({
-  baseURL:"/api",
-});
+const baseURL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000"; // fallback for local dev
+
+const API_URL = axios.create({baseURL});
 
 API_URL.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
