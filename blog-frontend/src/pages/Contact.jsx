@@ -11,7 +11,6 @@ export default function ContactPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real app, you would handle form submission here (e.g., send an email or save to a database)
     setSubmitted(true);
   };
 
@@ -24,8 +23,7 @@ export default function ContactPage() {
           className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-        >
+          transition={{ duration: 0.7 }}>
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-purple-400 via-indigo-400 to-cyan-300 bg-clip-text text-transparent">
             Get in Touch
           </h1>
@@ -35,13 +33,12 @@ export default function ContactPage() {
         </motion.section>
 
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
           <motion.div 
             className="bg-gray-800/50 p-8 rounded-2xl border border-white/10"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-          >
+            transition={{ duration: 0.7, delay: 0.2 }}>
+
             {submitted ? (
               <div className="flex flex-col items-center justify-center h-full text-center">
                 <CheckCircle2 className="text-green-400 h-16 w-16 mb-4" />
@@ -65,21 +62,19 @@ export default function ContactPage() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-transform hover:scale-105"
-                >
+                  className="w-full inline-flex items-center justify-center gap-2 bg-indigo-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-transform hover:scale-105">
                   Send Message <Send size={18} />
                 </button>
               </form>
             )}
           </motion.div>
 
-          {/* Contact Info */}
           <motion.div 
             className="space-y-6"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-          >
+            transition={{ duration: 0.7, delay: 0.4 }}>
+              
             <div className="bg-gray-800/50 p-6 rounded-2xl border border-white/10 flex items-start gap-4">
               <Mail className="text-indigo-300 h-8 w-8 mt-1" />
               <div>

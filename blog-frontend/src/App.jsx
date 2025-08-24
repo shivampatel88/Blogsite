@@ -3,7 +3,6 @@ import { Outlet, Link } from "react-router-dom";
 function App() {
   return (
     <div>
-      {/* Example navbar */}
       <nav className="p-4 bg-black text-white flex justify-between">
         <h1 className="text-xl font-bold">BlogSite</h1>
         <div className="space-x-4">
@@ -15,7 +14,6 @@ function App() {
         </div>
       </nav>
 
-      {/* Render child routes */}
       <Outlet />
     </div>
   );

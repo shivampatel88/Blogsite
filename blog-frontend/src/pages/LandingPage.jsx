@@ -108,7 +108,6 @@ const FeaturedBlogs = ({ onCardClick }) => {
     );
 };
 
-// Footer Component
 const Footer = () => {
     return (
         <footer className="bg-gray-800 py-8">

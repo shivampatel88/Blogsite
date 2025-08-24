@@ -1,7 +1,5 @@
 @import "tailwindcss";
 
-
-/* Add smooth transitions for background and text colors */
 body {
   transition-property: background-color, color;
   transition-duration: 300ms;

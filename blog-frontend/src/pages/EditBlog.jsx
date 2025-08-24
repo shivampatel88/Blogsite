@@ -39,7 +39,6 @@ export default function EditBlog({ token }) {
 
   const fileInputRef = useRef(null);
 
-  // Fetch blog data for editing
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -47,7 +46,7 @@ export default function EditBlog({ token }) {
         setTitle(res.data.title);
         setDesc(res.data.content);
         setCategory(res.data.category || "all");
-        setBannerPreview(res.data.bannerImage); // already uploaded banner
+        setBannerPreview(res.data.bannerImage); 
       } catch (error) {
         console.error("Error loading blog:", error);
       }
@@ -115,8 +114,7 @@ export default function EditBlog({ token }) {
             whileHover={{ x: -5 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate(-1)}
-            className="group flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2.5 text-sm border border-white/10"
-          >
+            className="group flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2.5 text-sm border border-white/10">
             <ArrowLeft size={16} />
             <span>Back</span>
           </motion.button>
@@ -124,8 +122,7 @@ export default function EditBlog({ token }) {
           <motion.h1
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400"
-          >
+            className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-cyan-400">
             <Sparkles size={20} className="text-cyan-400" />
             Edit Blog
             <Sparkles size={20} className="text-purple-400" />
@@ -135,7 +132,6 @@ export default function EditBlog({ token }) {
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-8">
-        {/* Banner Upload */}
         <div className="mb-8 relative">
           <label className="mb-3 flex items-center gap-2 text-sm font-medium text-white/80">
             <ImagePlus size={18} className="text-cyan-400" />
@@ -144,19 +140,16 @@ export default function EditBlog({ token }) {
 
           <motion.div
             whileHover={{ scale: 1.01 }}
-            className="relative overflow-hidden rounded-2xl border-2 border-dashed border-white/20"
-          >
+            className="relative overflow-hidden rounded-2xl border-2 border-dashed border-white/20">
             {bannerPreview ? (
               <>
                 <img
                   src={bannerPreview}
                   alt="Banner preview"
-                  className="h-60 w-full object-cover"
-                />
+                  className="h-60 w-full object-cover"/>
                 <button
                   onClick={removeBanner}
-                  className="absolute right-4 top-4 rounded-full bg-red-500/90 p-2"
-                >
+                  className="absolute right-4 top-4 rounded-full bg-red-500/90 p-2">
                   <X size={16} />
                 </button>
               </>
@@ -164,8 +157,7 @@ export default function EditBlog({ token }) {
               <button
                 type="button"
                 onClick={onPickBanner}
-                className="flex h-60 w-full flex-col items-center justify-center gap-3 text-white/60"
-              >
+                className="flex h-60 w-full flex-col items-center justify-center gap-3 text-white/60">
                 <ImagePlus size={40} />
                 <span>Click to upload banner image</span>
               </button>
@@ -175,12 +167,10 @@ export default function EditBlog({ token }) {
               type="file"
               accept="image/*"
               className="hidden"
-              onChange={onBannerChange}
-            />
+              onChange={onBannerChange}/>
           </motion.div>
         </div>
 
-        {/* Title & Category */}
         <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
             <label className="mb-2 flex items-center gap-2 text-sm font-medium text-white/80">
@@ -191,8 +181,7 @@ export default function EditBlog({ token }) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white"
-            />
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white"/>
           </div>
 
           <div>
@@ -203,8 +192,7 @@ export default function EditBlog({ token }) {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white"
-            >
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white">
               {CATEGORIES.map((c) => (
                 <option key={c.value} value={c.value} className="bg-gray-900">
                   {c.icon} {c.label}
@@ -214,7 +202,6 @@ export default function EditBlog({ token }) {
           </div>
         </div>
 
-        {/* Description */}
         <div className="mb-8">
           <label className="mb-2 flex items-center gap-2 text-sm font-medium text-white/80">
             <BookOpen size={18} className="text-cyan-400" />
@@ -224,11 +211,9 @@ export default function EditBlog({ token }) {
             value={desc}
             onChange={(e) => setDesc(e.target.value)}
             rows={12}
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white"
-          />
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3.5 text-white"/>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex gap-3">
           <motion.button
             whileHover={{ scale: canUpdate ? 1.05 : 1 }}
@@ -239,8 +224,7 @@ export default function EditBlog({ token }) {
               canUpdate
                 ? "bg-gradient-to-r from-purple-500 via-indigo-500 to-cyan-500 text-white"
                 : "bg-gray-700 text-white/40 cursor-not-allowed"
-            }`}
-          >
+            }`}>
             {loading ? (
               <Loader2 size={16} className="animate-spin inline" />
             ) : (
@@ -249,7 +233,6 @@ export default function EditBlog({ token }) {
           </motion.button>
         </div>
 
-        {/* Status Messages */}
         <div className="mt-4">
           {ok && (
             <div className="flex items-center gap-2 rounded-xl bg-green-500/20 px-4 py-2 text-green-300">

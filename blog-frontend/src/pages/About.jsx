@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { PenTool, Zap, Users, ShieldCheck, ArrowRight } from 'lucide-react';
-import Navbar from '../components/Navbar'; // Assuming a shared Navbar
+import Navbar from '../components/Navbar'; 
 import logo from '../assets/logo.png';
 
 const FeatureCard = ({ icon, title, children }) => (
@@ -27,7 +27,6 @@ export default function AboutPage() {
       <Navbar user={CURRENT_USER} dark={true} onGo={(path) => navigate(path)} />
 
       <main className="container mx-auto px-4 py-16 sm:py-24">
-        {/* Hero Section */}
         <motion.section
           className="text-center mb-20"
           initial={{ opacity: 0, y: 20 }}
@@ -43,13 +42,11 @@ export default function AboutPage() {
           </p>
         </motion.section>
 
-        {/* Features Section */}
         <section className="mb-20">
           <h2 className="text-3xl font-bold text-center mb-12 text-white">Why Writers Love BlogSite</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <FeatureCard icon={<PenTool className="text-indigo-300" />}>
               Beautiful Editor
-              {/* This <p> tag is the nested child, which is invalid. Change it to a <span> or <div> */}
               <span className="block mt-1">Focus on your writing with a clean, intuitive, and powerful editor that gets out of your way.</span>
             </FeatureCard>
             <FeatureCard icon={<Zap className="text-indigo-300" />}>
@@ -67,22 +64,18 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Call to Action */}
         <motion.section
           className="bg-gradient-to-r from-indigo-500/30 to-purple-500/30 rounded-3xl p-8 sm:p-12 text-center"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
+          transition={{ duration: 0.5 }}>
           <h2 className="text-3xl font-bold text-white">Ready to Share Your Story?</h2>
           <p className="mt-2 text-gray-300 max-w-xl mx-auto">
             Join thousands of writers who have found their home on BlogSite. It's free and only takes a minute to get started.
           </p>
-          <button
-            onClick={() => navigate('/signup')}
-            className="mt-6 inline-flex items-center gap-2 bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-gray-200 transition-transform hover:scale-105"
-          >
+          <button onClick={() => navigate('/signup')}
+            className="mt-6 inline-flex items-center gap-2 bg-white text-gray-900 font-semibold py-3 px-6 rounded-lg hover:bg-gray-200 transition-transform hover:scale-105">
             Start Writing Now <ArrowRight size={20} />
           </button>
         </motion.section>

@@ -27,9 +27,8 @@ export default function Home() {
   const [toast, setToast] = useState({ show: false, message: "" });
   const navigate = useNavigate();
   const CURRENT_USER = JSON.parse(localStorage.getItem("user")) || null;
-  const ME_ID = CURRENT_USER?._id || null; // ✅ ADDED: Current logged-in user id
+  const ME_ID = CURRENT_USER?._id || null; 
 
-  // ✅ ADDED: Normalize each blog with likesCount & likedByMe
   const normalizeBlog = (b) => ({
     ...b,
     likesCount: Array.isArray(b.likes) ? b.likes.length : 0,
@@ -38,7 +37,6 @@ export default function Home() {
       : false,
   });
 
- // 2. Define fetchBlogs wrapped in useCallback
   const fetchBlogs = useCallback(async () => {
     try {
       setLoading(true);
@@ -51,14 +49,12 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
-  }, [ME_ID]); // Dependency array for useCallback
+  }, [ME_ID]); 
 
-    // 3. Call fetchBlogs on initial component mount
   useEffect(() => {
     fetchBlogs();
-  }, [fetchBlogs]); // fetchBlogs is now a stable dependency
+  }, [fetchBlogs]);
 
-  // ✅ ADDED: Toggle like handler (updates grid + modal if open)
   const handleToggleLike = async (blogId) => {
     try {
       const res = await API_URL.put(`/likes/${blogId}/toggle`);
@@ -96,11 +92,10 @@ export default function Home() {
   const categoryLabel = CATEGORIES.find(c => c.value === category)?.label;
 
   const handleBlogDeleteSuccess = () => {
-    setSelected(null); // Close the modal
-    fetchBlogs(); // Refresh the blog list to remove the deleted one
+    setSelected(null);
+    fetchBlogs(); 
     setToast({ show: true, message: "Your blog was successfully deleted!" }); // Show the toast
 
-    // Automatically hide the toast after 3 seconds
     setTimeout(() => {
       setToast({ show: false, message: "" });
     }, 3000);
@@ -131,8 +126,7 @@ export default function Home() {
               setShowMyBlogsOnly(true);
               setCategory("all"); 
           }}
-          onGo={(path) => navigate(path)} 
-        />
+          onGo={(path) => navigate(path)} />
 
         <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 py-6 md:grid-cols-[260px_1fr] md:gap-8 md:px-6 md:py-10">
           <Sidebar categories={CATEGORIES} category={category} onSelectCategory={(cat) => {
@@ -155,20 +149,16 @@ export default function Home() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((b) => (
                 <BlogCard key={b._id}
-                  blog={{
-                    ...b,
-                    authorName: `${b.author?.firstname || ""} ${b.author?.lastname?.[0] || ""}.`,
+                  blog={{...b,authorName: `${b.author?.firstname || ""} ${b.author?.lastname?.[0] || ""}.`,
                   }}
                   onOpen={() => setSelected(b)}
-                  onToggleLike={() => handleToggleLike(b._id)} 
-                />
+                  onToggleLike={() => handleToggleLike(b._id)} />
               ))}
             </div>
           </section>
         </div>
 
-        {selected && (
-          <BlogModal
+        {selected && (<BlogModal
             blog={selected}
             me={CURRENT_USER}
             onClose={() => {setSelected(null);
@@ -181,8 +171,7 @@ export default function Home() {
                  b._id === blogId ? { ...b, likesCount, likedByMe } : b
               )
              );
-            }}
-          />
+            }}/>
         )}
       </div>
   );
