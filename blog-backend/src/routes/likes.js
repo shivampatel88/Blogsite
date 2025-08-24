@@ -4,7 +4,6 @@ const Blog = require('../models/Blog');
 
 const router = express.Router();
 
-// Toggle like/unlike
 router.put('/:blogId/toggle', verifyToken, async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.blogId);

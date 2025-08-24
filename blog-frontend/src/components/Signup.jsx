@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import logo from "../assets/logo.png";
-import API_URL from "../api"; // your axios/fetch base URL
+import API_URL from "../api";
 
 export default function SignUpPage( ) {
   const navigate = useNavigate();

@@ -2,7 +2,6 @@ const fs = require('fs');
 const Blog = require('../models/Blog');
 const cloudinary = require('../utils/cloudinary');
 
-// ---- Create Blog ----
 exports.createBlog = async (req, res) => {
   try {
     let imageUrl = "https://your-default-banner-url.com/default.jpg";
@@ -30,7 +29,6 @@ exports.createBlog = async (req, res) => {
   }
 };
 
-// ---- Get All Blogs ----
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find().populate('author', 'firstname lastname');
@@ -40,7 +38,6 @@ exports.getAllBlogs = async (req, res) => {
   }
 };
 
-// ---- Get Blog by ID ----
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate('author', 'firstname lastname');
@@ -50,7 +47,6 @@ exports.getBlogById = async (req, res) => {
   }
 };
 
-// ---- Update Blog ----
 exports.updateBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -78,7 +74,6 @@ exports.updateBlog = async (req, res) => {
   }
 };
 
-// ---- Delete Blog ----
 exports.deleteBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);

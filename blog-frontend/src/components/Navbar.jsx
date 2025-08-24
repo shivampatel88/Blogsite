@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate,Link } from "react-router-dom";
-import { useTheme } from "../context/ThemeContext"; // Update the import path
+import { useTheme } from "../context/ThemeContext"; 
 import { Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import logo from "../assets/logo.png";
