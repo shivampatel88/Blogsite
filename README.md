@@ -1,6 +1,6 @@
 # BlogSite: A Modern Full-Stack Blogging Platform
 
-![BlogSite Screenshot](https://i.imgur.com/CRk9f9B.jpeg)
+![BlogSite Screenshot](![alt text](image.png))
 
 Welcome to BlogSite, a feature-rich, full-stack blogging application built with the MERN stack (MongoDB, Express.js, React, Node.js). This platform provides a seamless and intuitive experience for writers to share their stories and for readers to discover and engage with content. The application features a sleek, modern UI with a dark mode, full CRUD (Create, Read, Update, Delete) functionality for blogs, and interactive features like comments and likes.
 
