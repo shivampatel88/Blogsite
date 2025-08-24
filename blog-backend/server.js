@@ -14,13 +14,13 @@ const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
-  'http://localhost:5173', // Your local dev environment
-   'http://blogsite-frontend-tau.vercel.app/' // Add your Vercel URL once it's deployed
+  'http://localhost:5173', 
+  'http://blogsite-frontend-tau.vercel.app'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
