@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ThemeProvider from './context/ThemeContext'; // Use the default import
 import LandingPage from "./pages/LandingPage";
 import SignIn from './components/Signin';
-import SignUp from './components/signup';
+import SignUp from './components/Signup';
 import EditBlog from './pages/EditBlog';
 import Home from './pages/Home'
 import CreateBlog from './pages/CreateBlog';
