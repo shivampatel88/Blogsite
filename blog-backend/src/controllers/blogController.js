@@ -66,11 +66,17 @@ exports.updateBlog = async (req, res) => {
     blog.content = req.body.content || blog.content;
     blog.category = req.body.category || blog.category;
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "blog_banners",
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "blog_banners" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(req.file.buffer);
       });
       blog.bannerImage = result.secure_url;
-      fs.unlinkSync(req.file.path);
     }
     
     await blog.save();
