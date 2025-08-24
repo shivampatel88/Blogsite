@@ -15,7 +15,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   'http://localhost:5173', // Your local dev environment
-   // Add your Vercel URL once it's deployed
+   'http://blogsite-frontend-tau.vercel.app/' // Add your Vercel URL once it's deployed
 ];
 
 app.use(cors({
