@@ -15,7 +15,7 @@ app.use(express.json());
 
 const allowedOrigins = [
   'http://localhost:5173', 
-  'http://blogsite-frontend-tau.vercel.app'
+  'https://blogsite-frontend-tau.vercel.app'
 ];
 
 app.use(cors({
