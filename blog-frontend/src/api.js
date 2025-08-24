@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseURL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000"; // fallback for local dev
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000"; // fallback for local dev
 
 const API_URL = axios.create({baseURL});
 
