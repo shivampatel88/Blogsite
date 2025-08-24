@@ -7,11 +7,17 @@ exports.createBlog = async (req, res) => {
     let imageUrl = "https://your-default-banner-url.com/default.jpg";
 
     if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "blog_banners",
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          { folder: "blog_banners" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        uploadStream.end(req.file.buffer);
       });
       imageUrl = result.secure_url;
-      fs.unlinkSync(req.file.path);
     }
 
     const newBlog = new Blog({
