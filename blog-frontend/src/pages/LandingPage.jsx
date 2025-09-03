@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {EyeIcon,HeartIcon,CloseIcon} from '../components/icons'
+import {EyeIcon} from '../components/icons/EyeIcon'
+import {HeartIcon} from '../components/icons/HeartIcon'
 
 
 const Header = ({ onSignUpClick }) => {
