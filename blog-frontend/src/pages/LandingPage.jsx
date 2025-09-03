@@ -1,24 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import {EyeIcon,HeartIcon,CloseIcon} from '../components/icons'
 
-const HeartIcon = () => (
-    <svg className="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-        <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd"></path>
-    </svg>
-);
-
-const EyeIcon = () => (
-    <svg className="w-4 h-4 text-blue-400 mr-1" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"></path>
-    </svg>
-);
-
-const CloseIcon = () => (
-    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-    </svg>
-);
 
 const Header = ({ onSignUpClick }) => {
     return (
@@ -41,8 +24,7 @@ const Hero = () => {
     return (
         <section 
             className="min-h-screen flex items-center justify-center text-center p-4 bg-cover bg-center"
-            style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${heroBgUrl}')` }}
-        >
+            style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${heroBgUrl}')` }}>
             <div className="max-w-3xl text-white">
                 <h2 className="text-4xl md:text-6xl font-extrabold mb-4 leading-tight">Discover Stories That Inspire.</h2>
                 <p className="text-lg md:text-xl p-7 text-gray-300 mb-8">Dive into a world of creativity, knowledge, and passion. Find your next favorite read from our community of talented writers.</p>
@@ -58,8 +40,7 @@ const BlogCard = ({ blog, onCardClick }) => {
     return (
         <div 
             className="bg-gray-800 rounded-xl overflow-hidden shadow-lg transform hover:-translate-y-2 transition-transform duration-300 cursor-pointer"
-            onClick={onCardClick}
-        >
+            onClick={onCardClick}>
             <div className="relative">
                 <img src={blog.imageUrl} alt={blog.title} className="w-full h-56 object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>

@@ -48,15 +48,11 @@ export default function SignInPage({ onSuccess }) {
         localStorage.setItem("user", JSON.stringify(data.user));
       }
 
-      if (data?.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-      }
       setOk(true);
       if (typeof onSuccess === "function") onSuccess(data?.user || null);
       setTimeout(() => navigate("/home"), 700);
     } catch (err) {
-      setError(err.message || "Something went wrong");
+      setError(err.response?.data?.error || err.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
